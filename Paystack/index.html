@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Paystack</title>
+</head>
+<body>
+  <div class="container">
+    <form id="paymentForm">
+      <h1>Paystack</h1>
+      <div class="form-group">
+        <label for="email">Payee's Email Address</label>
+        <input type="email" id="email-address" required />
+      </div>
+      <div class="form-group">
+        <label for="amount">Amount(#)</label>
+        <input type="tel" id="amount" required />
+      </div>
+      <div class="form-group">
+        <label for="first-name">First Name</label>
+        <input type="text" id="first-name" required />
+      </div>
+      <div class="form-group">
+        <label for="last-name">Last Name</label>
+        <input type="text" id="last-name" required />
+      </div>
+      <div class="form-submit">
+        <button type="submit" onclick="payWithPaystack()"> Pay </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let paymentForm = document.getElementById('paymentForm')
+    paymentForm.addEventListener('submit', payWithPaystack, false)
+    
+    function payWithPaystack(e) {
+      e.preventDefault();
+
+      let handler = paystackpop.setup({
+        key: 'pk_test_dfa19192366062da2238b45241d97ac694c266d8',
+        email: document.getElementById('email-address').value,
+        amount: document.getElementById('amount').value * 100,
+        currency: 'NGN',
+        channels:['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer'],
+        ref: ''+Math.floor((Math.random()*1000000000) +1),
+        onclose: function() {
+          alert('window closed.');
+        },
+        callback: function(response){
+          let message = 'payment complete! Reference:'+ response.reference;
+          alert(message)
+        }
+      })
+
+      handler.openIframe()
+    }
+  </script>
+</body>
+</html>
